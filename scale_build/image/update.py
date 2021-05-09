@@ -1,4 +1,5 @@
 import contextlib
+import distutils.dir_util
 import glob
 import itertools
 import os
@@ -8,7 +9,7 @@ import shutil
 from scale_build.config import SIGNING_KEY, SIGNING_PASSWORD
 from scale_build.utils.manifest import get_manifest
 from scale_build.utils.run import run
-from scale_build.utils.paths import CHROOT_BASEDIR, CONF_SOURCES, RELEASE_DIR, UPDATE_DIR
+from scale_build.utils.paths import CHROOT_BASEDIR, CONF_SOURCES, CUSTOM_TN, RELEASE_DIR, UPDATE_DIR
 
 from .bootstrap import umount_chroot_basedir
 from .manifest import build_manifest, build_update_manifest, UPDATE_FILE, UPDATE_FILE_HASH
@@ -86,6 +87,16 @@ def install_rootfs_packages_impl():
 
     # Copy the default sources.list file
     shutil.copy(CONF_SOURCES, os.path.join(CHROOT_BASEDIR, 'etc/apt/sources.list'))
+
+    # Copy over custom tn setup
+    distutils.dir_util._path_created = {}
+    distutils.dir_util.copy_tree(CUSTOM_TN, CHROOT_BASEDIR, preserve_symlinks=True)
+
+    run_in_chroot(['locale-gen'])
+    run([
+        'chown', '-R', 'root:root', os.path.join(CHROOT_BASEDIR, 'root/.zshrc'),
+        os.path.join(CHROOT_BASEDIR, 'root/.oh-my-zsh'), os.path.join(CHROOT_BASEDIR, 'root/.zsh_history')
+    ])
 
 
 def custom_rootfs_setup():
