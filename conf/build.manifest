@@ -98,6 +98,7 @@ base-prune:
 - gstreamer1.0-libav
 - libgdk-pixbuf2.0-0
 - x11-common
+- python-is-python2
 
 #
 # Update build-epoch when you want to force the next build to be
