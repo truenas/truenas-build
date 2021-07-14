@@ -63,6 +63,7 @@ base-packages:
 - firmware-realtek
 - grub-pc-bin
 - grub-efi-amd64-bin
+- python-is-python3
 - htop
 - ifstat
 - nvidia-kernel-dkms
@@ -98,6 +99,7 @@ base-prune:
 - gstreamer1.0-libav
 - libgdk-pixbuf2.0-0
 - x11-common
+- python-is-python2
 
 #
 # Update build-epoch when you want to force the next build to be
